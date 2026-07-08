@@ -18,6 +18,10 @@ class Mahasiswa extends Model
         'angkatan',
     ];
 
+    protected $casts = [
+        'tanggal_lahir' => 'date',
+    ];
+
     public function hobis()
     {
         return $this->belongsToMany(Hobi::class, 'mahasiswa_hobi');
