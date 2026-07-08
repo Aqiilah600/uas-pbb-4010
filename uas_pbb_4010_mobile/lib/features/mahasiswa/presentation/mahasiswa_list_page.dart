@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'mahasiswa_provider.dart';
+import 'tambah_mahasiswa_page.dart';
 
 class MahasiswaListPage extends ConsumerWidget {
   const MahasiswaListPage({super.key});
@@ -11,6 +12,15 @@ class MahasiswaListPage extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(title: const Text('Data Mahasiswa')),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const TambahMahasiswaPage()),
+          );
+        },
+        child: const Icon(Icons.add),
+      ),
       body: mahasiswaAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (err, stack) => Center(

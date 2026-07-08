@@ -1,5 +1,5 @@
 <?php
-
+//routes/api.php
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
@@ -16,5 +16,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/me', [AuthController::class, 'me']);
 
     Route::get('/mahasiswa', [MahasiswaApiController::class, 'index']);
+    Route::post('/mahasiswa', [MahasiswaApiController::class, 'store']);
     Route::get('/mahasiswa/{mahasiswa}', [MahasiswaApiController::class, 'show']);
+    Route::post('/mahasiswa/{mahasiswa}', [MahasiswaApiController::class, 'update']);
+    Route::delete('/mahasiswa/{mahasiswa}', [MahasiswaApiController::class, 'destroy']);
 });
