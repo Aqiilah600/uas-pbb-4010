@@ -41,4 +41,38 @@ class MahasiswaRepository {
 
     await _dioClient.dio.post(ApiConstants.mahasiswa, data: formData);
   }
+
+  Future<void> updateMahasiswa({
+    required int id,
+    required String namaLengkap,
+    required String nim,
+    required String tanggalLahir,
+    required String jenisKelamin,
+    required String angkatan,
+    required List<int> hobiIds,
+    XFile? fotoProfil,
+  }) async {
+    MultipartFile? multipartFoto;
+    if (fotoProfil != null) {
+      final bytes = await fotoProfil.readAsBytes();
+      multipartFoto = MultipartFile.fromBytes(bytes, filename: fotoProfil.name);
+    }
+
+    final formData = FormData.fromMap({
+      '_method': 'PUT',
+      'nama_lengkap': namaLengkap,
+      'nim': nim,
+      'tanggal_lahir': tanggalLahir,
+      'jenis_kelamin': jenisKelamin,
+      'angkatan': angkatan,
+      'hobi_ids': hobiIds,
+      if (multipartFoto != null) 'foto_profil': multipartFoto,
+    });
+
+    await _dioClient.dio.post('${ApiConstants.mahasiswa}/$id', data: formData);
+  }
+
+  Future<void> deleteMahasiswa(int id) async {
+    await _dioClient.dio.delete('${ApiConstants.mahasiswa}/$id');
+  }
 }

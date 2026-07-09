@@ -19,5 +19,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/mahasiswa', [MahasiswaApiController::class, 'store']);
     Route::get('/mahasiswa/{mahasiswa}', [MahasiswaApiController::class, 'show']);
     Route::post('/mahasiswa/{mahasiswa}', [MahasiswaApiController::class, 'update']);
+    Route::put('/mahasiswa/{mahasiswa}', [MahasiswaApiController::class, 'update']);
     Route::delete('/mahasiswa/{mahasiswa}', [MahasiswaApiController::class, 'destroy']);
 });

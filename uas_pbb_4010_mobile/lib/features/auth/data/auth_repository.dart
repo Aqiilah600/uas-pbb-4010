@@ -24,4 +24,18 @@ class AuthRepository {
       throw Exception('Gagal terhubung ke server. Coba lagi.');
     }
   }
+
+  Future<Map<String, dynamic>> getProfile() async {
+    final response = await _dioClient.dio.get(ApiConstants.me);
+    return response.data;
+  }
+
+  Future<void> logout() async {
+    try {
+      await _dioClient.dio.post(ApiConstants.logout);
+    } catch (_) {
+      // Tetap lanjut hapus token lokal walau request logout ke server gagal
+    }
+    await _storageService.deleteToken();
+  }
 }
