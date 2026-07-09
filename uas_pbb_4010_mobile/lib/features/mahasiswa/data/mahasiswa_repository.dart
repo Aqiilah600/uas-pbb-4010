@@ -34,7 +34,8 @@ class MahasiswaRepository {
       'tanggal_lahir': tanggalLahir,
       'jenis_kelamin': jenisKelamin,
       'angkatan': angkatan,
-      'hobi_ids': hobiIds,
+      'hobi_ids[]':
+          hobiIds, // <--- Gunakan kurung siku agar Laravel mendeteksinya sebagai list item
       if (multipartFoto != null) 'foto_profil': multipartFoto,
     });
 

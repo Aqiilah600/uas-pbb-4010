@@ -29,6 +29,7 @@ class MahasiswaApiController extends Controller
 
     public function store(Request $request)
     {
+        // 1. Longgarkan validasi hobi_ids agar menerima teks pecahan dari FormData / Postman
         $validated = $request->validate([
             'nama_lengkap' => 'required|string|max:255',
             'nim' => 'required|string|unique:mahasiswas,nim',
@@ -36,17 +37,32 @@ class MahasiswaApiController extends Controller
             'jenis_kelamin' => 'required|in:L,P',
             'foto_profil' => 'nullable|image|max:5120',
             'angkatan' => 'required|string|max:10',
-            'hobi_ids' => 'nullable|array',
+            'hobi_ids' => 'nullable', // <-- Dibuat fleksibel (Hapus kata |array)
         ]);
 
         if ($request->hasFile('foto_profil')) {
             $validated['foto_profil'] = $request->file('foto_profil')->store('foto-profil', 'public');
         }
 
+        // 2. Simpan data mahasiswa ke database
         $mahasiswa = Mahasiswa::create($validated);
-        $mahasiswa->hobis()->sync($request->input('hobi_ids', []));
+
+        // 3. Amankan data hobi_ids agar dikonversi paksa menjadi array bersih sebelum masuk tabel pivot
+        if ($request->has('hobi_ids') && !empty($request->hobi_ids)) {
+            $hobiIds = $request->hobi_ids;
+            
+            // Jika dikirim dari postman/flutter berupa string (misal: "1,2,3") kita pecah jadi array
+            if (is_string($hobiIds)) {
+                $hobiIds = explode(',', $hobiIds);
+            }
+            
+            // Sinkronisasi ke tabel relasi mahasiswa_hobi
+            $mahasiswa->hobis()->sync($hobiIds);
+        }
+
         $mahasiswa->load('hobis');
 
+        // 4. Kembalikan response JSON sukses asli
         return response()->json([
             'message' => 'Data mahasiswa berhasil ditambahkan.',
             'data' => $mahasiswa,
@@ -62,7 +78,7 @@ class MahasiswaApiController extends Controller
             'jenis_kelamin' => 'required|in:L,P',
             'foto_profil' => 'nullable|image|max:5120',
             'angkatan' => 'required|string|max:10',
-            'hobi_ids' => 'nullable|array',
+            'hobi_ids' => 'nullable',
         ]);
 
         if ($request->hasFile('foto_profil')) {
